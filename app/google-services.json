@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677618803171",
+    "project_id": "fearbaselogin",
+    "storage_bucket": "fearbaselogin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677618803171:android:44f995db8001380c3ac0d6",
+        "android_client_info": {
+          "package_name": "com.example.fearbaselogin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn70CIuLeUT4HvYyZtOm-WhTJ2ziw88a8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

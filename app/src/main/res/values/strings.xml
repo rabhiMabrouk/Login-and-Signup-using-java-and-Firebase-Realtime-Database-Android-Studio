@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FearbaseLogin</string>
+    <string name="login_txt"><font color="#757575">Alredy on user. </font><font color="#6892f7">login</font></string>
+</resources>
