@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +26,8 @@ public class loginActivity extends AppCompatActivity {
     EditText loginUser,loginPass;
     TextView signupTxtR;
     Button loginButt;
+    CheckBox checkBox;
+    private static final String fileSavelogin="sharPre";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +37,15 @@ public class loginActivity extends AppCompatActivity {
         loginPass = findViewById(R.id.login_pass);
         loginUser = findViewById(R.id.login_user);
         signupTxtR = findViewById(R.id.login_txt);
+        checkBox = findViewById(R.id.remeber_chekbox);
+
+
+        remamberMeChekbox();
 
         loginButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validateUserN()|!validatePass()){
-
-                }else {
+                if(validateUserN() && validatePass()){
                     checkUser();
                 }
             }
@@ -48,6 +55,7 @@ public class loginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(loginActivity.this,signupActivity.class);
                 loginActivity.this.startActivity(intent);
+                finish();
             }
         });
     }
@@ -82,11 +90,22 @@ public class loginActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     loginUser.setError(null);
                     String passFromdb = snapshot.child(UserValidty).child("password").getValue(String.class);
-                    if(!Objects.equals(passFromdb,passValidty)){
+
+                    if(Objects.equals(passFromdb,passValidty)){
                         loginUser.setError(null);
                         Intent intent = new Intent(loginActivity.this, MainActivity.class);
                         loginActivity.this.startActivity(intent);
+                        finish();
+
+                        if(checkBox.isChecked()) {
+                            SharedPreferences sharedPreferences = getSharedPreferences(fileSavelogin, 0);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name", "true");
+                            editor.apply();
+                            Toast.makeText(loginActivity.this, "save session", Toast.LENGTH_SHORT).show();
+                        }
                     }else {
+                        Toast.makeText(loginActivity.this, "bd"+passFromdb+" pass"+passValidty, Toast.LENGTH_SHORT).show();
                         loginPass.setError("invalid Credentials");
                         loginPass.requestFocus();
                     }
@@ -101,8 +120,19 @@ public class loginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // التعامل مع الأخطاء التي قد تحدث
+                Toast.makeText(loginActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public void remamberMeChekbox(){
+        SharedPreferences sharedPreferences=getSharedPreferences(fileSavelogin,MODE_PRIVATE);
+        String check = sharedPreferences.getString("name","");
+        if(check.equals("true")){
+            Intent intent = new Intent(loginActivity.this,MainActivity.class);
+            loginActivity.this.startActivity(intent);
+            finish();
+
+        }
     }
 }
